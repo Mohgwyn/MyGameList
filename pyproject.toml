@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "seuptools.build_meta"
+
+["project"]
+name = "crud_app"
+version = "0.0.1"
+authors = [
+    {name="Mohgwyn16", email="fgarciacobo@uma.es"}
+]
+description = "A simple crud app"
+readme = "README.md"
+
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status::2-Pre-Alpha"
+]
+
+dependencies = [
+    "pymongo"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Mohgwyn/MyGameList"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "ruff",
+    "isort",
+]
