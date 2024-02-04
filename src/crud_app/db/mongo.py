@@ -88,4 +88,4 @@ class MongoDataBase(DataBase):
         ...
 
     def user_exists(self, user: str):
-        return True if self._auth.find_one({'user': user}) else False
+        return {"user_id": user} if self._auth.find_one({'user': user}) else None

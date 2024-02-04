@@ -5,6 +5,7 @@ from db import DataBase
 
 def login(user: str, db: DataBase):
     response = db.user_exists(user=user)
+    print(response)
 
     if response is not None:
         with open(".cookie", "w") as f:

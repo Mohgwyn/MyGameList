@@ -13,9 +13,6 @@ if connection_string is None:
         "Provide the MongoDB Connection String via the environment variable CRUD_APP_CONNECTION_STRING"
     )
     exit(-1)
-print(connection_string)
-connection_string.replace("<password>", "jEMV5dRc55rn3QY6")
-print(connection_string)
 
 
 def main(): 
