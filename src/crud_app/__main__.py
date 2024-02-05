@@ -44,15 +44,28 @@ def main():
 
     db: DataBase = MongoDataBase(connection_string)
 
-    operaciones = {
-        "login": login(user=args.user, db=db),
-        "logout": logout(),
-        "add": db.add_game(args.title, args.hours, args.start_date, args.finish_date, args.platform, args.developer, args.rating),
-        "search": db.search_game_by(args.title, args.developer),
-        "update": None,
-        "delete": None,
-    }
-    operaciones[args.command]
+    #operaciones = {
+    #    "login": login(user=args.user, db=db),
+    #    "logout": logout(),
+    #    "add": db.add_game(args.title, args.hours, args.start_date, args.finish_date, args.platform, args.developer, args.rating),
+    #    "search": db.search_game_by(args.title, args.developer),
+    #    "update": None,
+    #    "delete": None,
+    #}
+    #operaciones[args.command]
+
+    if args.command == "login":
+        login(user=args.user, db=db)
+    elif args.command == "search":
+        db.search_game_by(args.title, args.developer)
+    elif args.command == "add":
+        db.add_game(args.title, args.hours, args.start_date, args.finish_date, args.platform, args.developer, args.rating)
+    elif args.command == "update":
+        db.update(args.title, args.rating)
+    elif args.command == "delete":
+        db.delete_game(args.title)
+    elif args.command == "logout":
+        logout()
 
     db.sync()
 
