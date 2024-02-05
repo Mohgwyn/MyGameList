@@ -13,15 +13,15 @@ class MongoDataBase(DataBase):
         self._auth = self._db["auth"]
 
 
-    def add_game(self, title: str, hours: float, start_date: datetime, finish_date: datetime, platform: str, developer: str, rating: int):
+    def add_game(self, title: str, hours: float, start_date: datetime, finish_date: datetime, platform: str, developer: str, rating: float):
         doc = {
             "title": title,
-            "hours": hours,
-            "start_date": start_date,
-            "finish_date": finish_date,
+            "hours": float(hours),
+            "start_date": datetime.strptime(start_date, '%d/%m/%Y'),
+            "finish_date": datetime.strptime(finish_date, '%d/%m/%Y'),
             "platform": platform,
             "developer": developer,
-            "rating": rating,
+            "rating": float(rating),
         }
         res = self._games.insert_one(doc)
 
