@@ -1,5 +1,6 @@
 import os
 import argparse
+import getpass
 
 from db import DataBase
 from db.mongo import MongoDataBase
@@ -15,13 +16,26 @@ if connection_string is None:
     exit(-1)
 
 
+class Password(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string):
+        if values is None:
+            values = getpass.getpass()
+
+        setattr(namespace, self.dest, values)
+
+
 def main(): 
     parser = argparse.ArgumentParser(description='CRUD operations over MyGameListDB')
 
     subparsers = parser.add_subparsers(help='Subcommands', dest='command')
 
+    signup_parser = subparsers.add_parser('signup', help='signup user')
+    signup_parser.add_argument('--user', help='Name of the game')
+    signup_parser.add_argument('--password', action=Password, dest='password', help='Developer of the game')
+
     login_parser = subparsers.add_parser('login', help='Login to the DB')
     login_parser.add_argument('--user', help='User to authenticate as', required=True)
+    login_parser.add_argument('--password', action=Password, dest='password', help='Developer of the game')
 
     logout_parser = subparsers.add_parser('logout', help='Logout of the DB')
 
@@ -30,8 +44,6 @@ def main():
     create_parser.add_argument('--hours', help='Time spent (hours)', required=True)
     create_parser.add_argument('--start-date', help='Game start date', required=True)
     create_parser.add_argument('--finish-date', help='Game finish date', required=True)
-    create_parser.add_argument('--platform', help='Platform played on', required=True)
-    create_parser.add_argument('--developer', help='Developer of the game', required=True)
     create_parser.add_argument('--rating', help='Rating of the game', required=True)
 
     search_parser = subparsers.add_parser('search', help='Search in the game db')
@@ -40,7 +52,7 @@ def main():
 
 
     args = parser.parse_args()
-
+    print(args)
 
     db: DataBase = MongoDataBase(connection_string)
 
@@ -55,7 +67,7 @@ def main():
     #operaciones[args.command]
 
     if args.command == "login":
-        login(user=args.user, db=db)
+        login(user=args.user, password=args.password, db=db)
     elif args.command == "search":
         db.search_game_by(args.title, args.developer)
     elif args.command == "add":
@@ -66,6 +78,8 @@ def main():
         db.delete_game(args.title)
     elif args.command == "logout":
         logout()
+    elif args.command == "signup":
+        db.signup(args.user, args.password)
 
     db.sync()
 
