@@ -3,7 +3,7 @@ from pymongo.server_api import ServerApi
 from datetime import datetime
 
 from db import DataBase
-import bcrypt
+
 
 class MongoDataBase(DataBase):
 
@@ -13,7 +13,20 @@ class MongoDataBase(DataBase):
         self._users = self._db["user_list"]
 
 
-    def add_game(self, title: str, hours: float, start_date: datetime, finish_date: datetime, rating: float):
+    def add_game(self, user: str, title: str, hours: float, start_date: datetime, finish_date: datetime, rating: float):
+        """Add game
+
+        Adds a game to the user list of games
+
+        Parametres
+        ----------
+
+        --title: Title of the game to add
+        --hours: Hours spennt on the game
+        --start-date: Date in dd/mm/YYYY format when user started playing
+        --finish-date: Date in dd/mm/YYYY format when user rolled credits
+        --rating: Rating of the game out of 10
+        """
         nuevo_juego = {
             "title": title,
             "hours": float(hours),
@@ -22,10 +35,10 @@ class MongoDataBase(DataBase):
             "rating": float(rating),
         }
         res = self._users.update_one(
-            {"user": user_id},
+            {"user": user},
             {"$push": {"game_list": nuevo_juego}})
 
-
+    '''
     def search_game_by(self, developer: str, year: int, rating: int):
         """Lee juegos de la base de datos
 
@@ -51,22 +64,29 @@ class MongoDataBase(DataBase):
             self._users.aggregate(pipeline)
         else:
             pass  # Error
+    '''
 
+    def delete_game(self, user: str, title: str):
+        """Delete game
 
-    def delete_game(self, title: str):
-        """Borra juego
+        Deletes a game from the user game list by title
 
-        Permite borra un juego de la lista a través de su título
-
-        Parametros
+        Parametres
         ----------
 
-        --title: Titulo del juego que se quiere borrar
+        --title: Title of the game to drop from game list
         """
+        drop_criterion = {
+            'game_list': {
+                'title': title
+            }
+        }
+        res = self._users.update_one(
+            {"user": user},
+            {"$pull": drop_criterion}
+        )
 
-        self._users.delete_one({"title": title})
-
-
+    '''
     def update(self, title: str, rating: int):
         """Actualiza rating
 
@@ -82,29 +102,26 @@ class MongoDataBase(DataBase):
         filter = {"title": title}
         update_value = {"$set": {"rating": rating}}
         self._users.update_one(filter, update_value)
+    '''
+
+    def signup(self, user: str, hashed_pw: str):
+        # comprobar que el usuario es unico
+        if self._users.find_one({'user': user}) is None:
+            new_user = {
+                'user': user,
+                'password': hashed_pw,
+                'game_list': []
+            }
+            self._users.insert_one(new_user)
+            return True
+        else: 
+            return False
 
 
-    def signup(self, user: str, password: str):
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        new_user = {
-            'user': user,
-            'password': hashed_password,
-            'game_list': []
-        }
+    def user_exists(self, user: str):
+        response = self._users.find_one({'user': user})
+        return response
 
-        self._users.insert_one(new_user)
-
-
-    def user_exists(self, user: str, password: str):
-        user_doc = self._users.find_one({'user': user})
-        doc = None
-
-        if bcrypt.checkpw(password.encode('utf-8'), user_doc['password']):
-            doc = {'user_id': user,
-                   'password': password}
-            
-        return doc
-
-
+        
     def sync(self):
         ...

@@ -5,16 +5,13 @@ import getpass
 from db import DataBase
 from db.mongo import MongoDataBase
 
-from auth import login, logout
+from auth import login, logout, signup, is_logged_in
 
 
 connection_string = os.getenv('CRUD_APP_CONNECTION_STRING')
 if connection_string is None:
-    print(
-        "Provide the MongoDB Connection String via the environment variable CRUD_APP_CONNECTION_STRING"
-    )
+    print("Provide the MongoDB Connection String via the environment variable CRUD_APP_CONNECTION_STRING")
     exit(-1)
-
 
 class Password(argparse.Action):
     def __call__(self, parser, namespace, values, option_string):
@@ -56,30 +53,33 @@ def main():
 
     db: DataBase = MongoDataBase(connection_string)
 
-    #operaciones = {
-    #    "login": login(user=args.user, db=db),
-    #    "logout": logout(),
-    #    "add": db.add_game(args.title, args.hours, args.start_date, args.finish_date, args.platform, args.developer, args.rating),
-    #    "search": db.search_game_by(args.title, args.developer),
-    #    "update": None,
-    #    "delete": None,
-    #}
-    #operaciones[args.command]
 
-    if args.command == "login":
-        login(user=args.user, password=args.password, db=db)
-    elif args.command == "search":
-        db.search_game_by(args.title, args.developer)
-    elif args.command == "add":
-        db.add_game(args.title, args.hours, args.start_date, args.finish_date, args.platform, args.developer, args.rating)
-    elif args.command == "update":
-        db.update(args.title, args.rating)
-    elif args.command == "delete":
-        db.delete_game(args.title)
-    elif args.command == "logout":
-        logout()
-    elif args.command == "signup":
-        db.signup(args.user, args.password)
+    user_logged = is_logged_in(db)
+    if user_logged is not None:
+        if args.command == "search":
+            # Not implemented
+            #db.search_game_by(args.title, args.developer)
+            pass
+        elif args.command == "add":
+            db.add_game(user_logged, args.title, args.hours, args.start_date, args.finish_date, args.rating)
+        elif args.command == "update":
+            # Not implemented
+            #db.update(args.title, args.rating)
+            pass
+        elif args.command == "delete":
+            db.delete_game(args.title)
+        elif args.command == "logout":
+            logout()
+        else:
+            print("Invalid command when logged in")
+    else: 
+        if args.command == "login":
+            login(user=args.user, password=args.password, db=db)
+        elif args.command == "signup":
+            signup(db, args.user, args.password)
+        else:
+            print("Invalid command when not logged in")
+
 
     db.sync()
 

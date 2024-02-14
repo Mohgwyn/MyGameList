@@ -11,7 +11,7 @@ class DataBase(ABC):
         pass
 
     @abstractmethod
-    def user_exists(self, user: str, password: str):
+    def user_exists(self, user: str):
         pass
 
     @abstractmethod

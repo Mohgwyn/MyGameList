@@ -1,18 +1,19 @@
 import os
 
 from db import DataBase
-import json
+import bcrypt
 
 
 def login(user: str, password: str, db: DataBase):
-    response = db.user_exists(user=user, password=password)
+    response = db.user_exists(user=user)
 
     if response is not None:
-        with open(".cookie", "w") as f:
-            f.write(json.dumps(response))
-        print("Logged in as user with ID", str(response["user_id"]))
-    else:
-        print(f"Invalid user: {user}, contact your admin to create an account")
+        if bcrypt.checkpw(password.encode('utf-8'), response['password']):
+            with open(".cookie", "w") as f:
+                f.write(response['user'])
+            print("Logged in as: ", str(response['user']))
+        else:
+            print(f"Invalid user or password.")
 
 
 def logout():
@@ -28,10 +29,19 @@ def logout():
 def is_logged_in(db: DataBase):
     try:
         with open(".cookie", "r") as f:
-            doc = json.loads(f.read())
-            if db.user_exists(user_id=doc['user_id'], password=['password']):
-                return True
+            user = f.read()
+            if db.user_exists(user=user):
+                return user
             else:
-                return False
+                return None
     except FileNotFoundError as _:
-        return False
+        return None
+    
+
+def signup(db: DataBase, user: str, password: str):
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    if db.signup(user, hashed_password):
+        print("Account created successfully")
+    else:
+        print(f"{user} already exists")
+    
