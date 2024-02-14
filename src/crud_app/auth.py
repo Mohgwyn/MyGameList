@@ -40,7 +40,7 @@ def is_logged_in(db: DataBase):
 
 def signup(db: DataBase, user: str, password: str):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    if db.signup(user, hashed_password):
+    if db.create_user(user, hashed_password):
         return True
     else:
         return False

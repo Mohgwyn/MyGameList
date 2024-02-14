@@ -104,7 +104,7 @@ class MongoDataBase(DataBase):
         self._users.update_one(filter, update_value)
     
 
-    def signup(self, user: str, hashed_pw: str):
+    def create_user(self, user: str, hashed_pw: str):
         # comprobar que el usuario es unico
         if self._users.find_one({'user': user}) is None:
             new_user = {

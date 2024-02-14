@@ -7,7 +7,7 @@ class DataBase(ABC):
         pass
 
     @abstractmethod
-    def signup(self, user: str, password: str):
+    def create_user(self, user: str, password: str):
         pass
 
     @abstractmethod
