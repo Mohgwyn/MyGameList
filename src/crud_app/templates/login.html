@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videogame list</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}"> <!-- Referencia al archivo CSS -->
+</head>
+<body>
+    <h1>My game list</h1>
+    <form method="post" action="/login">
+        <p>Don't have an account? <a href="/signup">Sign up</a></p>
+        <label for="user">User:</label>
+        <input type="text" name="user" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" name="password" required>
+        <br>
+        <input type="submit" value="Log in">
+    </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+</body>
+</html>

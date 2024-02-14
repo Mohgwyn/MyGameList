@@ -1,0 +1,61 @@
+body {
+    background-color: #222; /* Fondo oscuro */
+    color: #fff; /* Texto en blanco */
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #222; /* Fondo oscuro */
+    color: #fff; /* Texto en blanco */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente más bonita para el cuerpo */
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    color: #fff; /* Color de texto blanco para el título */
+    font-family: 'Pacifico', cursive; /* Cambia a una fuente más bonita para el h1 */
+}
+
+form {
+    display: inline-block;
+    background-color: #333; /* Fondo oscuro para el formulario */
+    padding: 20px;
+    border-radius: 10px; /* Bordes redondeados */
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+input {
+    width: calc(100% - 20px); /* Ajusta el ancho para considerar el padding */
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #444; /* Fondo oscuro para los campos de entrada */
+    color: #fff; /* Texto en blanco */
+    border: none;
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+input[type="submit"] {
+    background-color: #555; /* Fondo más claro para el botón de enviar */
+    color: #fff; /* Texto en blanco */
+    cursor: pointer;
+    width: calc(100% - 20px); /* Ajusta el ancho para considerar el padding */
+}
+
+p {
+    color: #fff; /* Color de texto rojo para el mensaje, ajusta según tu preferencia */
+}
+
+a {
+    text-decoration: None;
+    color: rgb(74, 164, 255)
+}
