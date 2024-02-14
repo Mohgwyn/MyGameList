@@ -7,13 +7,17 @@ class DataBase(ABC):
         pass
 
     @abstractmethod
-    def user_exists(self, user: str):
+    def signup(self, user: str, password: str):
+        pass
+
+    @abstractmethod
+    def user_exists(self, user: str, password: str):
         pass
 
     @abstractmethod
     def add_game(
         self, title: str, hours: float, start_date: datetime, 
-        finish_date: datetime, platform: str, developer: str, rating: int
+        finish_date: datetime, rating: int
     ):
         pass
 
