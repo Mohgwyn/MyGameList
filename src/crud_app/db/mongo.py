@@ -3,27 +3,27 @@ from pymongo.server_api import ServerApi
 from datetime import datetime
 
 from db import DataBase
+import bcrypt
 
 class MongoDataBase(DataBase):
 
     def __init__(self, mongo_connection_str: str):
         self._client = MongoClient(mongo_connection_str, server_api=ServerApi("1"))
         self._db = self._client["MyGameList"]
-        self._games = self._db["games"]
-        self._auth = self._db["auth"]
+        self._users = self._db["user_list"]
 
 
-    def add_game(self, title: str, hours: float, start_date: datetime, finish_date: datetime, platform: str, developer: str, rating: float):
-        doc = {
+    def add_game(self, title: str, hours: float, start_date: datetime, finish_date: datetime, rating: float):
+        nuevo_juego = {
             "title": title,
             "hours": float(hours),
             "start_date": datetime.strptime(start_date, '%d/%m/%Y'),
             "finish_date": datetime.strptime(finish_date, '%d/%m/%Y'),
-            "platform": platform,
-            "developer": developer,
             "rating": float(rating),
         }
-        res = self._games.insert_one(doc)
+        res = self._users.update_one(
+            {"user": user_id},
+            {"$push": {"game_list": nuevo_juego}})
 
 
     def search_game_by(self, developer: str, year: int, rating: int):
@@ -48,7 +48,7 @@ class MongoDataBase(DataBase):
             if rating:
                 pipeline.append({"$match": {"rating": rating}})
 
-            self._games.aggregate(pipeline)
+            self._users.aggregate(pipeline)
         else:
             pass  # Error
 
@@ -64,7 +64,7 @@ class MongoDataBase(DataBase):
         --title: Titulo del juego que se quiere borrar
         """
 
-        self._games.delete_one({"title": title})
+        self._users.delete_one({"title": title})
 
 
     def update(self, title: str, rating: int):
@@ -81,11 +81,30 @@ class MongoDataBase(DataBase):
 
         filter = {"title": title}
         update_value = {"$set": {"rating": rating}}
-        self._games.update_one(filter, update_value)
+        self._users.update_one(filter, update_value)
+
+
+    def signup(self, user: str, password: str):
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        new_user = {
+            'user': user,
+            'password': hashed_password,
+            'game_list': []
+        }
+
+        self._users.insert_one(new_user)
+
+
+    def user_exists(self, user: str, password: str):
+        user_doc = self._users.find_one({'user': user})
+        doc = None
+
+        if bcrypt.checkpw(password.encode('utf-8'), user_doc['password']):
+            doc = {'user_id': user,
+                   'password': password}
+            
+        return doc
 
 
     def sync(self):
         ...
-
-    def user_exists(self, user: str):
-        return {"user_id": user} if self._auth.find_one({'user': user}) else None
