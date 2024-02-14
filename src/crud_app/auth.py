@@ -11,9 +11,9 @@ def login(user: str, password: str, db: DataBase):
         if bcrypt.checkpw(password.encode('utf-8'), response['password']):
             with open(".cookie", "w") as f:
                 f.write(response['user'])
-            print("Logged in as: ", str(response['user']))
+            return True
         else:
-            print(f"Invalid user or password.")
+            return False
 
 
 def logout():
@@ -41,7 +41,7 @@ def is_logged_in(db: DataBase):
 def signup(db: DataBase, user: str, password: str):
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     if db.signup(user, hashed_password):
-        print("Account created successfully")
+        return True
     else:
-        print(f"{user} already exists")
+        return False
     
