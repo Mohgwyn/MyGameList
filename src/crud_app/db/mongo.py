@@ -38,7 +38,7 @@ class MongoDataBase(DataBase):
             {"user": user},
             {"$push": {"game_list": nuevo_juego}})
 
-    '''
+    
     def search_game_by(self, developer: str, year: int, rating: int):
         """Lee juegos de la base de datos
 
@@ -64,7 +64,7 @@ class MongoDataBase(DataBase):
             self._users.aggregate(pipeline)
         else:
             pass  # Error
-    '''
+    
 
     def delete_game(self, user: str, title: str):
         """Delete game
@@ -86,7 +86,7 @@ class MongoDataBase(DataBase):
             {"$pull": drop_criterion}
         )
 
-    '''
+    
     def update(self, title: str, rating: int):
         """Actualiza rating
 
@@ -102,7 +102,7 @@ class MongoDataBase(DataBase):
         filter = {"title": title}
         update_value = {"$set": {"rating": rating}}
         self._users.update_one(filter, update_value)
-    '''
+    
 
     def signup(self, user: str, hashed_pw: str):
         # comprobar que el usuario es unico
