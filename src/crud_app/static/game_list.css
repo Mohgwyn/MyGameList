@@ -1,0 +1,36 @@
+body {
+    background-color: #222; /* Fondo oscuro */
+    color: #fff; /* Texto en blanco */
+    font-family: Arial, sans-serif;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar {
+    color: #fff;
+    padding: 20px;
+}
+
+.sidebar select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.content {
+    flex: 1;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2, ul {
+    margin: 0;
+}
+
+li {
+    text-align: left;
+    list-style-type: none;
+}
