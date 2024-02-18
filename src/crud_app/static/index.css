@@ -7,15 +7,6 @@ body {
     padding: 0;
 }
 
-body {
-    background-color: #222; /* Fondo oscuro */
-    color: #fff; /* Texto en blanco */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente más bonita para el cuerpo */
-    text-align: center;
-    margin: 0;
-    padding: 0;
-}
-
 h1 {
     color: #fff; /* Color de texto blanco para el título */
     font-family: 'Pacifico', cursive; /* Cambia a una fuente más bonita para el h1 */
