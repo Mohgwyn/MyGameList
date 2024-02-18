@@ -4,14 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ user }} profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='game_list.css') }}"> <!-- Referencia al archivo CSS -->
 </head>
 <body>
-    <h1>Welcome, {{ user }}</h1>
-    <h2>Your games:</h2>
-    <ul>
-        {% for game in games %}
-            <li>{{ game }}</li>
-        {% endfor %}
-    </ul>
+    <div class="sidebar">
+        <select onchange="location = this.value;">
+            <option value="#" selected disabled>Menu</option>
+            <option value="#">Home</option>
+            <option value="#">Profile</option>
+            <option value="#">Search</option>
+            <option value="#">Add Game</option>
+        </select>
+    </div>
+
+    <div class="content">
+        <h1>Welcome, {{ user }}</h1>
+        <h2>Your games:</h2>
+        <ul>
+            {% for game in games %}
+                <li>{{ game['title'] }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    
 </body>
 </html>
